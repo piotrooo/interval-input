@@ -1,5 +1,5 @@
 # intervalInput()
-jQuery plugin which allow make interval from input. Returns _number of seconds_ calculated from the interval.
+jQuery plugin which allow make interval from the input. Returns _number of seconds_ calculated from the interval.
 
 ## Usage
 
