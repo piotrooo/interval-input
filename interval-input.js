@@ -27,7 +27,7 @@
         this.placeholder = placeholder;
 
         this.getHtml = function () {
-            return '<span style="margin-left: 2px;margin-right: 2px;">' + this.placeholder + '</span>';
+            return '<span class="interval-input-placeholder" style="margin-left: 2px;margin-right: 2px;">' + this.placeholder + '</span>';
         };
     }
 
@@ -101,7 +101,7 @@
             var wrapperSelector = this.eventNamespace;
             var inputValues = this._getInputValues();
             this.element.hide();
-            this.element.after('<div class="' + wrapperSelector.replace('.', '') + '"></div>');
+            this.element.after('<div class="interval-input-wrapper ' + wrapperSelector.replace('.', '') + '"></div>');
 
             var intervalInputs = IntervalInputsFactory.fromFormat(this.options.format, inputValues, this.options.translations);
             for (var i in intervalInputs) {
