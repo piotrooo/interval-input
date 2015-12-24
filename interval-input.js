@@ -1,3 +1,10 @@
+/*!
+ * intervalInputr
+ * https://github.com/piotrooo/interval-input
+ *
+ * Copyright 2015 Piotr Olaszewski
+ * Released under the MIT license
+ */
 (function ($) {
     var Formats = Object.freeze({
         DAY: 'd',
