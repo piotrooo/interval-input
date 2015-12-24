@@ -6,23 +6,20 @@
         SECOND: 's'
     });
 
-    function IntervalInput(type, size, value) {
+    function IntervalInput(type, size, value, tooltip) {
         this.type = type;
         this.size = size;
         this.value = value || 0;
-        this.text = null;
-
-        this.addText = function (text) {
-            this.text = text;
-        };
+        this.tooltip = tooltip || '';
 
         this.getHtml = function () {
-            var input = '<input type="text" style="width: ' + this.size + 'em;" value="' + this.value + '" class="interval-input" data-type="' + this.type + '">';
-            if (this.text) {
-                var placeholder = new Placeholder(this.text);
-                input += placeholder.getHtml();
-            }
-            return input;
+            return '<input type="text" ' +
+                'style="width: ' + this.size + 'em;" ' +
+                'value="' + this.value + '" ' +
+                'class="interval-input" ' +
+                'data-type="' + this.type + '" ' +
+                'title="' + this.tooltip + '"' +
+                '>';
         };
     }
 
@@ -39,36 +36,66 @@
 
     IntervalInputsFactory.fromFormat = function (format, inputValues, translations) {
         var intervalInputs = [];
-        var formatsMap = format.split("");
+        var formatParser = FormatParser.parse(format);
+        var formatsMap = formatParser.getFormats();
+        var placeholdersMap = formatParser.getPlaceholders();
+
         for (var i in formatsMap) {
-            var formatName = formatsMap[i];
             var intervalInput = null;
+            var formatName = formatsMap[i];
+            var placeholder = placeholdersMap[i];
             var inputValue = inputValues[formatName];
-            if (formatName === Formats.DAY) {
-                intervalInput = new IntervalInput(formatName, 3, inputValue);
-                intervalInput.addText(translations[formatName]);
+            if ($.inArray(formatName, [Formats.DAY, Formats.HOUR, Formats.MINUTE, Formats.SECOND]) != -1) {
+                var tooltip = translations[formatName];
+                intervalInput = new IntervalInput(formatName, 3, inputValue, tooltip);
                 intervalInputs.push(intervalInput);
-            } else if (formatName === Formats.HOUR || formatName === Formats.MINUTE || formatName === Formats.SECOND) {
-                intervalInput = new IntervalInput(formatName, 3, inputValue);
-                intervalInputs.push(intervalInput);
-            } else if (formatName === ' ' || formatName === ':') {
-                var placeholder = new Placeholder(formatName);
-                intervalInputs.push(placeholder);
             } else {
                 throw new Error('Unknown format option [' + formatName + ']');
+            }
+
+            if (typeof placeholder != 'undefined') {
+                intervalInputs.push(new Placeholder(placeholder));
             }
         }
         return intervalInputs;
     };
 
+    function FormatParser(formats, placeholders) {
+        this.formats = formats;
+        this.placeholders = placeholders;
+
+        this.getFormats = function () {
+            return this.formats;
+        };
+
+        this.getPlaceholders = function () {
+            return this.placeholders;
+        };
+    }
+
+    FormatParser.parse = function (format) {
+        var regExp = /\[(.*?)\]/g;
+        var formatsMap = format.replace(regExp, ',').split(',');
+        var placeholdersMap = [];
+        var tmp;
+        while ((tmp = regExp.exec(format)) !== null) {
+            if (tmp.index === regExp.lastIndex) {
+                regExp.lastIndex++;
+            }
+            placeholdersMap.push(tmp[1]);
+        }
+        return new FormatParser(formatsMap, placeholdersMap);
+    };
+
     $.widget("custom.intervalInput", {
         options: {
             translations: {
-                d: 'days'
+                d: 'days',
+                h: 'hours',
+                i: 'minutes',
+                s: 'seconds'
             },
-            format: 'd h:i:s',
-            onChange: function (seconds) {
-            }
+            format: 'd[days]h[:]i[:]s'
         },
         _create: function () {
             var wrapperSelector = this.eventNamespace;
@@ -88,7 +115,8 @@
         _getInputValues: function () {
             var result = {};
             var value = parseInt(this.element.val());
-            var formatsMap = this.options.format.split("");
+            var formatParser = FormatParser.parse(this.options.format);
+            var formatsMap = formatParser.getFormats();
             var tmp = 0;
             var numberOf = null;
             for (var i in formatsMap) {
@@ -130,9 +158,10 @@
                     $(this).val(0);
                 }
             });
-            $(document).on('keyup', inputSelector, function () {
+            $(document).on('keyup', inputSelector, function (e) {
                 var resultSeconds = 0;
-                var formatsMap = self.options.format.split("");
+                var formatParser = FormatParser.parse(self.options.format);
+                var formatsMap = formatParser.getFormats();
                 for (var i in formatsMap) {
                     var formatName = formatsMap[i];
                     if (formatName === Formats.DAY) {
@@ -150,7 +179,7 @@
                     }
                 }
                 $('input[name="' + self.element.attr('name') + '"]').val(resultSeconds);
-                self.options.onChange(resultSeconds);
+                self._trigger('change', null, {seconds: resultSeconds});
             });
             $(document).on('keydown', inputSelector, function (e) {
                 if ($.inArray(e.keyCode, [8, 9, 13, 27, 46, 116, 127]) !== -1 ||
