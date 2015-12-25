@@ -23,7 +23,7 @@ $('#selector').on('intervalinputchange', function(e, data) {
 });
 ```
 
-See all [examples](http://softol.pl/interval-input-example/).
+See all [examples](http://github.softol.pl/examples/interval-input/index.html).
 
 ## API
 
