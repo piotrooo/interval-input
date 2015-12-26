@@ -70,11 +70,13 @@ d[days]h[:]i[:]s
 
 ### Methods
 
-#### `setEnabled`
+#### `setEnabled(enabled)`
+
+* `enabled` boolean
 
 Set enabled or disabled plugin inputs.
 
-#### `refresh`
+#### `refresh()`
 
 Recalcualte interval values.
 
