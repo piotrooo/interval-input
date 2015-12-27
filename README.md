@@ -38,6 +38,7 @@ Input tooltips texts.
 Default:
 ```
 {
+    w: 'weeks',
     d: 'days',
     h: 'hours',
     i: 'minutes',
@@ -50,6 +51,7 @@ Default:
 Format used to generate the inputs for interval.
 
 Available options:
+* `w` - weeks
 * `d` - days
 * `h` - hours
 * `i` - minutes

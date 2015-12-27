@@ -1,7 +1,7 @@
 {
   "name": "interval-input",
   "main": "interval-input.js",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "homepage": "https://github.com/piotrooo/interval-input",
   "authors": [
     "piotrooo <piotroo89@gmail.com>"

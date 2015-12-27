@@ -7,6 +7,7 @@
  */
 (function ($) {
     var Formats = Object.freeze({
+        WEEK: 'w',
         DAY: 'd',
         HOUR: 'h',
         MINUTE: 'i',
@@ -51,7 +52,7 @@
             var formatName = formatsMap[i];
             var placeholder = placeholdersMap[i];
             var inputValue = inputValues[formatName];
-            if ($.inArray(formatName, [Formats.DAY, Formats.HOUR, Formats.MINUTE, Formats.SECOND]) != -1) {
+            if ($.inArray(formatName, [Formats.WEEK, Formats.DAY, Formats.HOUR, Formats.MINUTE, Formats.SECOND]) != -1) {
                 var tooltip = translations[formatName];
                 intervalInput = new IntervalInput(formatName, 3, inputValue, tooltip);
                 intervalInputs.push(intervalInput);
@@ -96,6 +97,7 @@
     $.widget("custom.intervalInput", {
         options: {
             translations: {
+                w: 'weeks',
                 d: 'days',
                 h: 'hours',
                 i: 'minutes',
@@ -128,7 +130,11 @@
             var numberOf = null;
             for (var i in formatsMap) {
                 var formatName = formatsMap[i];
-                if (formatName === Formats.DAY) {
+                if (formatName === Formats.WEEK) {
+                    var weeksSeconds = 3600 * 24 * 7;
+                    tmp = value % weeksSeconds;
+                    numberOf = (value - tmp) / weeksSeconds;
+                } else if (formatName === Formats.DAY) {
                     var daysSeconds = 3600 * 24;
                     tmp = value % daysSeconds;
                     numberOf = (value - tmp) / daysSeconds;
@@ -170,7 +176,10 @@
                 var formatsMap = self._parsedFormat.getFormats();
                 for (var i in formatsMap) {
                     var formatName = formatsMap[i];
-                    if (formatName === Formats.DAY) {
+                    if (formatName === Formats.WEEK) {
+                        var weeks = $(wrapperSelector + ' .interval-input[data-type=' + Formats.WEEK + ']').val() || 0;
+                        resultSeconds += (3600 * 24 * 7) * parseInt(weeks);
+                    } else if (formatName === Formats.DAY) {
                         var days = $(wrapperSelector + ' .interval-input[data-type=' + Formats.DAY + ']').val() || 0;
                         resultSeconds += (3600 * 24) * parseInt(days);
                     } else if (formatName === Formats.HOUR) {
