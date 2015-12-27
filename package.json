@@ -1,6 +1,5 @@
 {
   "name": "interval-input",
-  "title": "jQuery interval input",
   "description": "jQuery plugin which allow make interval from input",
   "keywords": [
     "interval",
@@ -9,17 +8,18 @@
     "jquery-plugin"
   ],
   "version": "1.0.1",
-  "author": {
-    "name": "Piotr Olaszewski",
-    "url": "http://softol.pl"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ],
+  "main": "interval-input.js",
+  "author": "piotrooo",
+  "license": "MIT",
   "dependencies": {
     "jquery": ">=1.11"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piotrooo/interval-input.git"
+  },
+  "bugs": {
+    "url": "https://github.com/piotrooo/interval-input/issues"
+  },
+  "homepage": "https://github.com/piotrooo/interval-input"
 }
