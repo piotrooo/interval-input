@@ -1,0 +1,25 @@
+{
+  "name": "interval-input",
+  "main": "interval-input.js",
+  "version": "1.0.2",
+  "homepage": "https://github.com/piotrooo/interval-input",
+  "authors": [
+    "piotrooo <piotroo89@gmail.com>"
+  ],
+  "description": "jQuery plugin which allow make interval from input",
+  "keywords": [
+    "interval",
+    "input",
+    "jquery",
+    "jquery-plugin"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/piotrooo/interval-input.git"
+  },
+  "dependencies": {
+    "jquery": ">=1.11",
+    "jquery-ui": ">=1.11"
+  }
+}
