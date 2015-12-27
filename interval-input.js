@@ -1,5 +1,5 @@
 /*!
- * intervalInputr
+ * intervalInput
  * https://github.com/piotrooo/interval-input
  *
  * Copyright 2015 Piotr Olaszewski
@@ -41,11 +41,10 @@
     function IntervalInputsFactory() {
     }
 
-    IntervalInputsFactory.fromFormat = function (format, inputValues, translations) {
+    IntervalInputsFactory.fromFormat = function (parsedFormat, inputValues, translations) {
         var intervalInputs = [];
-        var formatParser = FormatParser.parse(format);
-        var formatsMap = formatParser.getFormats();
-        var placeholdersMap = formatParser.getPlaceholders();
+        var formatsMap = parsedFormat.getFormats();
+        var placeholdersMap = parsedFormat.getPlaceholders();
 
         for (var i in formatsMap) {
             var intervalInput = null;
@@ -104,13 +103,15 @@
             },
             format: 'd[days]h[:]i[:]s'
         },
+        _parsedFormat: null,
         _create: function () {
+            this._parsedFormat = FormatParser.parse(this.options.format);
             var wrapperSelector = this.eventNamespace;
             var inputValues = this._getInputValues();
             this.element.hide();
             this.element.after('<div class="interval-input-wrapper ' + wrapperSelector.replace('.', '') + '"></div>');
 
-            var intervalInputs = IntervalInputsFactory.fromFormat(this.options.format, inputValues, this.options.translations);
+            var intervalInputs = IntervalInputsFactory.fromFormat(this._parsedFormat, inputValues, this.options.translations);
             for (var i in intervalInputs) {
                 $(wrapperSelector).append(intervalInputs[i].getHtml());
             }
@@ -122,8 +123,7 @@
         _getInputValues: function () {
             var result = {};
             var value = parseInt(this.element.val());
-            var formatParser = FormatParser.parse(this.options.format);
-            var formatsMap = formatParser.getFormats();
+            var formatsMap = this._parsedFormat.getFormats();
             var tmp = 0;
             var numberOf = null;
             for (var i in formatsMap) {
@@ -167,8 +167,7 @@
             });
             $(document).on('keyup', inputSelector, function (e) {
                 var resultSeconds = 0;
-                var formatParser = FormatParser.parse(self.options.format);
-                var formatsMap = formatParser.getFormats();
+                var formatsMap = self._parsedFormat.getFormats();
                 for (var i in formatsMap) {
                     var formatName = formatsMap[i];
                     if (formatName === Formats.DAY) {
